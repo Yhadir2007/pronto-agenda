@@ -36,8 +36,11 @@ export const useAlarmChecker = ({ tasks, onAlarm, markAsNotified }: AlarmChecker
 
         // Check if alarm should trigger (within 1 minute window)
         if (timeDiff <= 0 && timeDiff > -60000) {
+          console.log('Triggering alarm for task:', task.title);
+          
           // Play alarm sound
           if (audioRef.current) {
+            audioRef.current.currentTime = 0;
             audioRef.current.play().catch(err => {
               console.error('Error playing alarm:', err);
             });
@@ -60,8 +63,8 @@ export const useAlarmChecker = ({ tasks, onAlarm, markAsNotified }: AlarmChecker
       lastCheckRef.current = now;
     };
 
-    // Check every 30 seconds
-    const interval = setInterval(checkAlarms, 30000);
+    // Check every 1 second for more accurate alarm triggering
+    const interval = setInterval(checkAlarms, 1000);
     
     // Check immediately
     checkAlarms();
